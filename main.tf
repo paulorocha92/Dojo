@@ -13,12 +13,11 @@ resource "google_compute_instance" "instance1" {
      image = "debian-cloud/debian-9"
    }
  }
-
  scheduling {
    preemptible = true
  }
 
-  guest_accelerator {
+guest_accelerator {
     type = "nvidia-tesla-t4" # <<<<< Try changing this to nvidia-tesla-p4 to compare the costs
     count = 4
   }
@@ -30,6 +29,36 @@ resource "google_compute_instance" "instance1" {
     }
   }
 }
+
+
+resource "google_compute_instance" "instance2" {
+ name         = "instance2"
+ machine_type = "n1-standard-8" # <<<<< Try changing this to n1-standard-8 to compare the costs
+ zone         = "us-central1-a"
+
+ boot_disk {
+   initialize_params {
+     image = "debian-cloud/debian-9"
+   }
+ }
+ scheduling {
+   preemptible = true
+ }
+
+guest_accelerator {
+    type = "nvidia-tesla-t4" # <<<<< Try changing this to nvidia-tesla-p4 to compare the costs
+    count = 4
+  }
+
+  network_interface {
+    network = "default"
+
+    access_config {
+    }
+  }
+}
+
+
 
 resource "google_dns_record_set" "frontend" {
   name = "frontend.123"
